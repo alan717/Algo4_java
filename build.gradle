@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar{
+    String somestr=''
+    configurations.runtime.each{somestr=somestr+" lib\\"+it.name}
+    manifest{
+        attributes 'Main-Class':'HexUtil'
+        attributes 'Class-Path':somestr
+    }
+}
+
+task copyJar(type:Copy){
+    from configurations.runtime
+    into ('build/libs/lib')
+}
+
+task release(type: Copy,dependsOn:[build,copyJar]){
+}
